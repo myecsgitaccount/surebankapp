@@ -26,6 +26,13 @@ namespace SureBank.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options => {
+                    options.Authority = "http://localhost:5000";
+                    options.RequireHttpsMetadata = false;
+                    options.ApiName = "surebankapi"; 
+                }); 
+
             services.AddDbContext<BankContext>(opt => opt.UseInMemoryDatabase("SureBankDb"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -39,6 +46,7 @@ namespace SureBank.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication(); 
             app.UseMvc();
         }
     }
